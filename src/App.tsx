@@ -632,15 +632,16 @@ function App() {
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-[0.3em] text-amber-300">Dane rejestrowe</h3>
             <div className="mt-5 space-y-3 rounded-[2rem] border border-white/10 bg-white/5 p-5 text-sm text-slate-300">
-              <p><strong className="text-white">KRS:</strong> 0000 0000 000</p>
-              <p><strong className="text-white">NIP:</strong> 000-000-00-00</p>
-              <p><strong className="text-white">REGON:</strong> 000000000</p>
-              <p className="pt-2 text-xs leading-6 text-slate-400">Miejsce przygotowane na oficjalne numery identyfikacyjne do uzupełnienia po rejestracji.</p>
+              <p><strong className="text-white">KRS:</strong> 0001241173</p>
+              <p><strong className="text-white">NIP:</strong> 7343670962</p>
+              <p><strong className="text-white">REGON:</strong> 544752575</p>
+              <p><strong className="text-white">Numer konta bankowego:</strong>78 1600 1462 1720 4333 1000 0001</p>
+              <p className="pt-2 text-xs leading-6 text-slate-400"></p>
             </div>
           </div>
         </div>
         <div className="border-t border-white/10 py-5 text-center text-xs text-slate-400">
-          © 2026 FUNDACJA MATULANKA — strona prototypowa przygotowana do prezentacji fundatorom.
+          © 2026 FUNDACJA MATULANKA — Wszelkie prawa zastrzeżone.
         </div>
       </footer>
     </div>
