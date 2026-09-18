@@ -1,268 +1,670 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FUNDACJA MATULANKA</title>
-    <script data-arena-recording="true">(function(){
-"use strict";
-var SK="__arena_rec",RRWEB_CDN="https://cdn.jsdelivr.net/npm/rrweb@2.0.0-alpha.4/dist/rrweb.min.js";
-var MAX_RECORDING_MS=600000,MAX_RRWEB_EVENTS=30000,MAX_INTERACTIONS=5000,MAX_CURSOR_POINTS=10000,recStopped=false;
-var stored=null;try{var raw=sessionStorage.getItem(SK);if(raw)stored=JSON.parse(raw);}catch(ex){}
-var meta=stored?stored.m||null:null,rrwebEvents=stored?stored.r||[]:[],rrwebStarted=false,startTime=stored?stored.st||Date.now():Date.now();
-var interactions=stored?stored.i||[]:[],cursorPath=stored?stored.c||[]:[],lastCursorSample=0,lastScrollSample=0;
-var pageHeight=document.documentElement.scrollHeight;
-var viewport={width:window.innerWidth,height:window.innerHeight};
-function isCapped(){if(recStopped)return true;if(Date.now()-startTime>=MAX_RECORDING_MS){recStopped=true;return true;}return false;}
-function persist(){try{var d=JSON.stringify({r:rrwebEvents,i:interactions,c:cursorPath,m:meta,st:startTime});sessionStorage.setItem(SK,d);}catch(ex){rrwebEvents=rrwebEvents.slice(Math.floor(rrwebEvents.length/2));try{sessionStorage.setItem(SK,JSON.stringify({r:rrwebEvents,i:interactions,c:cursorPath,m:meta,st:startTime}));}catch(ex2){}}}
-setInterval(persist,5000);
-window.addEventListener("resize",function(){viewport={width:window.innerWidth,height:window.innerHeight};pageHeight=document.documentElement.scrollHeight;});
-document.addEventListener("click",function(e){if(isCapped()||interactions.length>=MAX_INTERACTIONS)return;var el=e.target;var tag=el.tagName?el.tagName.toLowerCase():"";var text=(el.textContent||"").trim().substring(0,80);var classes=el.className&&typeof el.className==="string"?el.className.substring(0,120):"";interactions.push({type:"click",t:Date.now()-startTime,x:Math.round(e.clientX),y:Math.round(e.clientY),element:{tag:tag,text:text,classes:classes}});},true);
-window.addEventListener("scroll",function(){if(isCapped()||interactions.length>=MAX_INTERACTIONS)return;var now=Date.now();if(now-lastScrollSample<200)return;lastScrollSample=now;var scrollY=Math.round(window.scrollY||window.pageYOffset||0);var depthPct=pageHeight>viewport.height?Math.min(100,Math.round(((scrollY+viewport.height)/pageHeight)*100)):100;interactions.push({type:"scroll",t:now-startTime,y:scrollY,depth_pct:depthPct});},{passive:true});
-document.addEventListener("mousemove",function(e){if(isCapped()||cursorPath.length>=MAX_CURSOR_POINTS)return;var now=Date.now();if(now-lastCursorSample<250)return;lastCursorSample=now;cursorPath.push([Math.round(e.clientX),Math.round(e.clientY),now-startTime]);},{passive:true});
-document.addEventListener("keydown",function(e){if(isCapped()||interactions.length>=MAX_INTERACTIONS)return;if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;interactions.push({type:"keydown",t:Date.now()-startTime,key:e.key});},true);
-function buildAnalytics(){if(!meta)return null;var ph=document.documentElement.scrollHeight;var maxScroll=0,clickElements={},firstClick=null,firstScroll=null,totalDistance=0;for(var i=0;i<interactions.length;i++){var ev=interactions[i];if(ev.type==="scroll"){if(ev.depth_pct>maxScroll)maxScroll=ev.depth_pct;if(!firstScroll)firstScroll=ev.t;}if(ev.type==="click"){if(!firstClick)firstClick=ev.t;var key=ev.element.tag+":"+ev.element.text.substring(0,30);clickElements[key]=true;}}for(var j=1;j<cursorPath.length;j++){var dx=cursorPath[j][0]-cursorPath[j-1][0];var dy=cursorPath[j][1]-cursorPath[j-1][1];totalDistance+=Math.sqrt(dx*dx+dy*dy);}var duration=Date.now()-startTime;var clickHeatmap=[];for(var k=0;k<interactions.length;k++){if(interactions[k].type==="click")clickHeatmap.push([interactions[k].x,interactions[k].y]);}return{generation_id:meta.generationId,tournament_id:meta.tournamentId,started_at:new Date(startTime).toISOString(),ended_at:new Date().toISOString(),duration_ms:duration,viewport:viewport,page_height:ph,interactions:interactions,cursor_path:cursorPath,click_heatmap:clickHeatmap,summary:{total_clicks:clickHeatmap.length,total_scrolls:interactions.filter(function(e){return e.type==="scroll";}).length,max_scroll_depth_pct:maxScroll,unique_elements_clicked:Object.keys(clickElements).length,time_to_first_click_ms:firstClick,time_to_first_scroll_ms:firstScroll,cursor_distance_px:Math.round(totalDistance),active_time_ms:duration}};}
-function loadRrweb(){if(rrwebStarted)return;rrwebStarted=true;var s=document.createElement("script");s.src=RRWEB_CDN;s.onload=function(){var rec=(window.rrweb&&window.rrweb.record)||window.rrwebRecord;if(!rec)return;rec({emit:function(event){if(rrwebEvents.length>=MAX_RRWEB_EVENTS||isCapped())return;rrwebEvents.push(event);}});};s.onerror=function(){};document.head.appendChild(s);}
-window.addEventListener("message",function(e){if(!e.data||typeof e.data.type!=="string")return;if(e.data.type==="arena:init"){if(!meta)startTime=Date.now();meta={generationId:e.data.generationId||e.data.modelId,tournamentId:e.data.tournamentId};persist();loadRrweb();if(e.source)e.source.postMessage({type:"arena:init-ack",generationId:meta.generationId},"*");}if(e.data.type==="arena:flush"){var resp={type:"arena:recording-data",generationId:meta?meta.generationId:null,rrwebEvents:rrwebEvents,analytics:buildAnalytics()};try{sessionStorage.removeItem(SK);}catch(ex){}if(e.source)e.source.postMessage(resp,"*");}});
-loadRrweb();
-})();</script>
-  <script data-arena-views="true">(function(){var isTop=false;try{isTop=window.self===window.top;}catch(e){}if(!isTop)return;window.__ARENA_META={generationId:"gpt-5.4",tournamentId:"d709c908-3647-43d8-b1c1-381452ad7102"};var payload={tournamentId:"d709c908-3647-43d8-b1c1-381452ad7102",modelId:"gpt-5.4"};try{var r=document.referrer;if(r){var u=new URL(r);payload.referrerDomain=u.hostname;}}catch(e){}try{var vid=null;try{vid=localStorage.getItem('arena_vid');}catch(e){}if(!vid){vid=typeof crypto!=="undefined"&&crypto.randomUUID?crypto.randomUUID():(Date.now().toString(36)+Math.random().toString(36).slice(2)).slice(0,32);try{localStorage.setItem('arena_vid',vid);}catch(e){}}if(vid)payload.viewerId=vid;}catch(e){}try{fetch("https://www.designarena.ai/api/agon/page-views",{"method":"POST","headers":{"Content-Type":"application/json"},"body":JSON.stringify(payload),"keepalive":true});}catch(e){}})();</script>
+<html lang="pl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fundacja Matulanka</title>
+<meta name="description" content="Fundacja Matulanka — wsparcie rodzin, seniorów i osób z niepełnosprawnościami, edukacja z bezpieczeństwa i pierwszej pomocy oraz popularyzacja pszczelarstwa. Biała Niżna, Gmina Grybów." />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0f172a;
+    --navy-soft:#1e293b;
+    --amber:#f59e0b;
+    --amber-light:#fbbf24;
+    --forest:#065f46;
+    --forest-light:#10b981;
+    --ink:#0f172a;
+    --muted:#475569;
+    --line:#e2e8f0;
+    --paper:#f8fafc;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    color:var(--ink);
+    background:linear-gradient(180deg,#fffaf0 0%,#f7f8fc 45%,#edf2f7 100%);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 20px}
+  @media (min-width:768px){.wrap{padding:0 32px}}
+
+  /* header */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(15,23,42,0.92);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0;color:#fff}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-badge{
+    width:44px;height:44px;border-radius:14px;flex:none;
+    background:linear-gradient(135deg,var(--amber-light),var(--forest-light));
+    display:flex;align-items:center;justify-content:center;color:var(--navy);
+    box-shadow:0 8px 20px -6px rgba(245,158,11,0.5);
+  }
+  .brand small{display:block;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--amber-light);font-weight:700}
+  .brand strong{display:block;font-size:16px;font-weight:700}
+  .nav-links{display:none;gap:28px}
+  .nav-links a{font-size:14px;font-weight:500;color:#e2e8f0;transition:color .2s}
+  .nav-links a:hover{color:var(--amber-light)}
+  .cta{
+    display:none;border-radius:999px;padding:10px 22px;font-size:14px;font-weight:700;
+    background:linear-gradient(90deg,var(--amber-light),#fde68a);color:var(--navy);
+    transition:transform .2s;
+  }
+  .cta:hover{transform:translateY(-1px)}
+  .burger{
+    display:inline-flex;border:1px solid rgba(255,255,255,0.15);background:none;color:#fff;
+    border-radius:999px;padding:9px;cursor:pointer;
+  }
+  @media (min-width:900px){
+    .nav-links{display:flex}
+    .cta{display:inline-flex}
+    .burger{display:none}
+  }
+  .mobile-menu{display:none;border-top:1px solid rgba(255,255,255,0.1);background:rgba(15,23,42,0.98);padding:14px 0}
+  .mobile-menu.open{display:block}
+  .mobile-menu a{display:block;padding:12px 4px;color:#e2e8f0;font-size:15px;font-weight:500;border-radius:12px}
+  .mobile-menu a:hover{background:rgba(255,255,255,0.05);color:var(--amber-light)}
+
+  /* hero */
+  .hero{position:relative;overflow:hidden}
+  .hero-bg{position:absolute;inset:0}
+  .hero-bg img{width:100%;height:100%;object-fit:cover}
+  .hero-bg::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(120deg,rgba(2,6,23,0.90),rgba(15,23,42,0.82),rgba(6,95,70,0.55));
+  }
+  .hero-inner{
+    position:relative;display:grid;gap:48px;align-items:center;
+    min-height:88vh;padding:64px 0;
+  }
+  @media (min-width:1024px){.hero-inner{grid-template-columns:1.15fr 0.85fr}}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;border-radius:999px;
+    border:1px solid rgba(251,191,36,0.35);background:rgba(255,255,255,0.08);
+    padding:8px 16px;font-size:11px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;
+    color:#fde68a;
+  }
+  .hero h1{
+    color:#fff;margin:24px 0 0;font-weight:900;line-height:1.08;
+    font-size:clamp(2.1rem,5vw,4.2rem);max-width:38ch;
+  }
+  .hero h1 span{color:var(--amber-light)}
+  .hero p.lead{color:#dbe4ee;margin:22px 0 0;max-width:56ch;font-size:1.05rem;line-height:1.8}
+  .btn-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:36px}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:15px 26px;
+    font-size:14px;font-weight:700;transition:transform .2s,background .2s;border:none;cursor:pointer;
+  }
+  .btn-amber{background:linear-gradient(90deg,var(--amber-light),#fde68a);color:var(--navy)}
+  .btn-amber:hover{transform:translateY(-1px)}
+  .btn-ghost{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff}
+  .btn-ghost:hover{background:rgba(255,255,255,0.16)}
+  .btn-dark{background:linear-gradient(90deg,var(--navy),var(--forest));color:#fff;width:100%;justify-content:center}
+  .chip-grid{display:grid;gap:14px;margin-top:36px;grid-template-columns:repeat(3,1fr)}
+  @media (max-width:640px){.chip-grid{grid-template-columns:1fr}}
+  .chip{border-radius:20px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.08);padding:16px;backdrop-filter:blur(4px)}
+  .chip .t{font-size:13px;font-weight:700;color:var(--amber-light)}
+  .chip .d{margin-top:6px;font-size:13px;line-height:1.5;color:#dbe4ee}
+
+  .profile-card{
+    border-radius:28px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.09);
+    padding:28px;color:#fff;backdrop-filter:blur(10px);box-shadow:0 30px 60px -20px rgba(0,0,0,0.5);
+  }
+  .profile-card .head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+  .profile-card .kicker{font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#fde68a}
+  .profile-card h2{margin:8px 0 0;font-size:22px;font-weight:700;line-height:1.3}
+  .profile-card .items{margin-top:22px;display:flex;flex-direction:column;gap:14px}
+  .profile-card .item{display:flex;gap:12px;background:rgba(2,6,23,0.35);border-radius:18px;padding:14px}
+  .profile-card .item p{margin:0;font-size:13px;line-height:1.6;color:#e6ebf1}
+  .profile-card .more{display:inline-flex;align-items:center;gap:8px;margin-top:20px;font-size:13px;font-weight:700;color:#fde68a}
+
+  /* sections */
+  section{padding:72px 0}
+  .kicker{
+    display:inline-flex;align-items:center;gap:8px;border-radius:999px;background:rgba(245,158,11,0.12);
+    padding:9px 16px;font-size:12px;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:#b45309;
+  }
+  h2.title{margin:16px 0 0;font-size:clamp(1.7rem,3vw,2.6rem);line-height:1.15;font-weight:900;color:var(--ink)}
+  p.text{margin-top:20px;max-width:62ch;font-size:1rem;line-height:1.9;color:var(--muted)}
+
+  .mission-grid{display:grid;gap:36px}
+  @media (min-width:1024px){.mission-grid{grid-template-columns:1.1fr 0.9fr;align-items:center}}
+  .fact-grid{display:grid;gap:16px;margin-top:32px;grid-template-columns:repeat(2,1fr)}
+  @media (max-width:560px){.fact-grid{grid-template-columns:1fr}}
+  .fact{border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,0.92);padding:18px;box-shadow:0 8px 20px -14px rgba(15,23,42,0.2)}
+  .fact .l{font-size:13px;font-weight:600;color:#64748b}
+  .fact .v{margin-top:6px;font-size:15px;font-weight:700;color:var(--ink)}
+
+  .legal-card{border-radius:28px;background:var(--navy);color:#fff;padding:32px;box-shadow:0 30px 60px -25px rgba(15,23,42,0.5)}
+  .legal-card .pill{display:inline-flex;border-radius:999px;background:rgba(251,191,36,0.15);padding:8px 16px;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--amber-light)}
+  .legal-card h3{margin:18px 0 0;font-size:22px;font-weight:700;line-height:1.4}
+  .legal-card .box{margin-top:20px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);padding:18px}
+  .legal-card .box .row{display:flex;align-items:center;gap:10px;color:var(--amber-light);font-weight:700;font-size:14px}
+  .legal-card .box p{margin:10px 0 0;font-size:13.5px;line-height:1.7;color:#dbe4ee}
+
+  /* pillars */
+  .pillars-head{display:flex;flex-direction:column;gap:16px;justify-content:space-between}
+  @media (min-width:900px){.pillars-head{flex-direction:row;align-items:flex-end}}
+  .pillar-grid{margin-top:40px;display:grid;gap:24px;grid-template-columns:repeat(3,1fr)}
+  @media (max-width:900px){.pillar-grid{grid-template-columns:1fr}}
+  .pillar{
+    border-radius:28px;overflow:hidden;background:#fff;border:1px solid var(--line);
+    box-shadow:0 16px 30px -20px rgba(15,23,42,0.25);transition:transform .3s,box-shadow .3s;
+  }
+  .pillar:hover{transform:translateY(-4px);box-shadow:0 26px 44px -20px rgba(15,23,42,0.32)}
+  .pillar-top{position:relative;height:170px;padding:22px;display:flex;flex-direction:column;justify-content:space-between;color:#fff}
+  .pillar-top.p1{background:linear-gradient(135deg,#92400e,#f59e0b)}
+  .pillar-top.p2{background:linear-gradient(135deg,#0f172a,#065f46)}
+  .pillar-top.p3{background:linear-gradient(135deg,#065f46,#22c55e)}
+  .pillar-icon{width:48px;height:48px;border-radius:16px;background:rgba(255,255,255,0.92);color:var(--navy);display:flex;align-items:center;justify-content:center}
+  .pillar-top .sub{font-size:11px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;opacity:.85}
+  .pillar-top .ttl{margin-top:4px;font-size:22px;font-weight:800}
+  .pillar-body{padding:24px}
+  .pillar-body p{margin:0;font-size:14px;line-height:1.8;color:var(--muted)}
+  .pillar-body ul{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+  .pillar-body li{display:flex;gap:10px;font-size:13.5px;line-height:1.6;color:#334155}
+  .pillar-body li::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--amber);margin-top:7px;flex:none}
+
+  /* jak pomagamy */
+  .steps{margin-top:44px;display:flex;flex-direction:column;gap:20px}
+  .step{display:grid;gap:16px}
+  @media (min-width:768px){.step{grid-template-columns:60px 1fr}}
+  .step-dot{display:none;align-items:center;justify-content:center;width:40px;height:40px;border-radius:14px;background:var(--navy);color:var(--amber-light)}
+  @media (min-width:768px){.step-dot{display:flex}}
+  .step-card{border-radius:24px;border:1px solid var(--line);background:#fff;padding:22px;box-shadow:0 12px 26px -20px rgba(15,23,42,0.2)}
+  .step-tag{font-size:11px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#94a3b8}
+  .step-card h3{margin:10px 0 0;font-size:19px;font-weight:800}
+  .step-card p{margin:10px 0 0;font-size:14px;line-height:1.8;color:var(--muted)}
+  .tag-row{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+  .tag{border-radius:999px;background:#f1f5f9;padding:8px 14px;font-size:12px;font-weight:600;color:#334155}
+
+  /* support */
+  .support-grid{display:grid;gap:24px}
+  @media (min-width:1024px){.support-grid{grid-template-columns:0.95fr 1.05fr}}
+  .support-dark{border-radius:28px;background:var(--navy);color:#fff;padding:32px;box-shadow:0 30px 60px -25px rgba(15,23,42,0.5)}
+  .support-dark h2{margin:14px 0 0;font-size:26px;font-weight:800}
+  .support-dark p{margin:14px 0 0;font-size:14px;line-height:1.8;color:#cbd5e1}
+  .support-cols{margin-top:28px;display:grid;gap:14px;grid-template-columns:repeat(2,1fr)}
+  @media (max-width:560px){.support-cols{grid-template-columns:1fr}}
+  .support-cols .box{border-radius:20px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);padding:16px}
+  .support-cols .box .t{font-size:14px;font-weight:700}
+  .support-cols .box .d{margin-top:8px;font-size:13px;line-height:1.6;color:#cbd5e1}
+
+  .support-form{border-radius:28px;border:1px solid var(--line);background:#fff;padding:28px;box-shadow:0 24px 50px -25px rgba(15,23,42,0.25)}
+  .support-form .headrow{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:flex-end}
+  .support-form h3{margin:8px 0 0;font-size:22px;font-weight:800}
+  .min-badge{border-radius:999px;background:#fffbeb;color:#b45309;padding:8px 16px;font-size:13px;font-weight:700}
+  .amount-grid{margin-top:28px;display:grid;gap:14px;grid-template-columns:repeat(2,1fr)}
+  @media (min-width:900px){.amount-grid{grid-template-columns:repeat(4,1fr)}}
+  .amount{border-radius:20px;border:1px solid var(--line);background:#fff;padding:16px;text-align:left;cursor:pointer;transition:border-color .2s,background .2s}
+  .amount:hover{border-color:#fcd34d;background:#fffbeb}
+  .amount.active{border-color:var(--amber);background:#fffbeb;box-shadow:0 10px 20px -14px rgba(245,158,11,0.5)}
+  .amount .lbl{font-size:13px;font-weight:600;color:#64748b}
+  .amount .amt{margin-top:6px;font-size:26px;font-weight:900;color:var(--ink)}
+  .amount .dsc{margin-top:6px;font-size:12.5px;line-height:1.5;color:var(--muted)}
+
+  form.donate{margin-top:28px;display:flex;flex-direction:column;gap:18px}
+  .field-row{display:grid;gap:18px}
+  @media (min-width:640px){.field-row{grid-template-columns:1fr 1fr}}
+  label.field{display:flex;flex-direction:column;gap:8px;font-size:13.5px;font-weight:600;color:#334155}
+  input[type=text],input[type=email],input[type=number]{
+    border:1px solid var(--line);background:#f8fafc;border-radius:16px;padding:13px 16px;font-size:14px;
+    font-family:inherit;outline:none;transition:border-color .2s,background .2s;
+  }
+  input:focus{border-color:var(--amber);background:#fff}
+  .amount-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:18px;background:#f8fafc;padding:18px}
+  .amount-summary .l{font-size:13px;font-weight:600;color:#64748b}
+  .amount-summary .v{margin-top:4px;font-size:26px;font-weight:900;color:var(--ink)}
+  .consent{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:16px;padding:14px;font-size:13px;line-height:1.6;color:var(--muted)}
+  .consent input{margin-top:3px}
+  .form-msg{border-radius:16px;padding:14px;font-size:13.5px;font-weight:600}
+  .form-msg.ok{background:#ecfdf5;color:#047857}
+  .form-msg.err{background:#fff1f2;color:#be123c}
+
+  /* footer */
+  footer{margin-top:80px;background:var(--navy);color:#fff}
+  .foot-grid{display:grid;gap:40px;padding:56px 0}
+  @media (min-width:1024px){.foot-grid{grid-template-columns:1.1fr 0.9fr 0.8fr}}
+  .foot-brand{display:flex;align-items:center;gap:12px}
+  footer p{color:#cbd5e1;font-size:14px;line-height:1.8}
+  footer h3{font-size:12px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--amber-light);margin:0}
+  .foot-links{margin-top:18px;display:flex;flex-direction:column;gap:10px;font-size:14px;color:#cbd5e1}
+  .foot-links a:hover{color:#fff}
+  .foot-legal{margin-top:18px;border-radius:22px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);padding:18px;font-size:14px;color:#cbd5e1;display:flex;flex-direction:column;gap:8px}
+  .foot-legal strong{color:#fff}
+  .foot-bottom{border-top:1px solid rgba(255,255,255,0.1);padding:18px 0;text-align:center;font-size:12.5px;color:#94a3b8}
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in-view{opacity:1;transform:translateY(0)}
+  .icon{width:20px;height:20px;flex:none}
+</style>
 </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-      <script data-element-picker>/**
- * Agon Element Picker — injected into the preview iframe.
- *
- * Listens for postMessage from the parent to toggle inspect mode.
- * In inspect mode, hovering highlights elements and clicking sends
- * the element's source location (from data-source-loc) back to the parent.
- *
- * Protocol:
- *   Parent -> iframe:  { type: 'inspect:mode', enabled: true/false }
- *   iframe -> Parent:  { type: 'element:selected', file, line, column, tag, text, classes, id }
- */
-(function () {
-  'use strict';
+<body>
 
-  var inspectEnabled = false;
-  var overlay = null;
-  var label = null;
-  var currentTarget = null;
+<header>
+  <div class="wrap nav">
+    <a href="#start" class="brand">
+      <span class="brand-badge">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3c-3.5 0-6 2.5-6 5.5 0 2 1.2 3.8 3 4.7-.6 1-1 2.3-1 3.6 0 2.6 1.8 4.7 4 4.7s4-2.1 4-4.7c0-1.3-.4-2.6-1-3.6 1.8-.9 3-2.7 3-4.7C18 5.5 15.5 3 12 3Z"/></svg>
+      </span>
+      <span>
+        <small>Fundacja</small>
+        <strong>Matulanka</strong>
+      </span>
+    </a>
 
-  function createOverlay() {
-    if (overlay) return;
+    <nav class="nav-links">
+      <a href="#start">Start</a>
+      <a href="#misja">Misja</a>
+      <a href="#filary">Filary</a>
+      <a href="#jak-pomagamy">Jak pomagamy</a>
+      <a href="#wspieraj">Wspieraj</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
 
-    overlay = document.createElement('div');
-    overlay.id = '__picker-overlay';
-    overlay.style.cssText = [
-      'position: fixed',
-      'pointer-events: none',
-      'z-index: 2147483647',
-      'border: 2px solid #3b82f6',
-      'background: rgba(59, 130, 246, 0.08)',
-      'transition: all 0.05s ease-out',
-      'display: none',
-      'box-sizing: border-box',
-    ].join(';');
+    <a href="#wspieraj" class="cta">Wspieraj nas</a>
 
-    label = document.createElement('div');
-    label.id = '__picker-label';
-    label.style.cssText = [
-      'position: fixed',
-      'pointer-events: none',
-      'z-index: 2147483647',
-      'background: #1e40af',
-      'color: #fff',
-      'font: 11px/1.4 monospace',
-      'padding: 2px 6px',
-      'border-radius: 3px',
-      'white-space: nowrap',
-      'display: none',
-      'max-width: 400px',
-      'overflow: hidden',
-      'text-overflow: ellipsis',
-    ].join(';');
+    <button class="burger" id="burgerBtn" aria-label="Przełącz menu" type="button">
+      <svg class="icon" id="burgerIconOpen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      <svg class="icon" id="burgerIconClose" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+    </button>
+  </div>
 
-    document.body.appendChild(overlay);
-    document.body.appendChild(label);
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="wrap">
+      <a href="#start">Start</a>
+      <a href="#misja">Misja</a>
+      <a href="#filary">Filary</a>
+      <a href="#jak-pomagamy">Jak pomagamy</a>
+      <a href="#wspieraj">Wspieraj</a>
+      <a href="#kontakt">Kontakt</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section id="start" class="hero">
+    <div class="hero-bg">
+      <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=1600&q=80" alt="Rodzina i wsparcie społeczne" loading="eager" />
+    </div>
+    <div class="wrap hero-inner">
+      <div class="reveal">
+        <span class="eyebrow">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+          Ustanowiona 14.04.2026 r.
+        </span>
+        <h1>Tradycja, bezpieczeństwo i wsparcie <span>dla pokoleń</span></h1>
+        <p class="lead">FUNDACJA MATULANKA łączy opiekę społeczną, edukację proobronną, rozwój rodzin i szacunek do natury, tworząc nowoczesne centrum pomocy dla dzieci, młodzieży, seniorów, osób chorych i z niepełnosprawnościami.</p>
+        <div class="btn-row">
+          <a href="#filary" class="btn btn-amber">Poznaj nasze cele
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+          <a href="#wspieraj" class="btn btn-ghost">Wspieraj nas</a>
+        </div>
+        <div class="chip-grid">
+          <div class="chip"><div class="t">Rodzina i opieka</div><div class="d">Wsparcie społeczne i opieka wytchnieniowa</div></div>
+          <div class="chip"><div class="t">Bezpieczeństwo</div><div class="d">Pierwsza pomoc, cyberbezpieczeństwo, survival</div></div>
+          <div class="chip"><div class="t">Rozwój lokalny</div><div class="d">Pszczelarstwo, edukacja i aktywizacja społeczno-zawodowa</div></div>
+        </div>
+      </div>
+
+      <div class="reveal profile-card">
+        <div class="head">
+          <div>
+            <div class="kicker">Profil instytucji</div>
+            <h2>Fundacja z misją wielowymiarowego wsparcia</h2>
+          </div>
+          <svg class="icon" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fde68a" stroke-width="2"><path d="M12 3l7 3v6c0 5-3 8-7 9-4-1-7-4-7-9V6l7-3Z"/></svg>
+        </div>
+        <div class="items">
+          <div class="item"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fde68a" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg><p>Pomoc społeczna, charytatywna i humanitarna dla osób w potrzebie.</p></div>
+          <div class="item"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fde68a" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg><p>Edukacja praktyczna: bezpieczeństwo, pierwsza pomoc, strzelectwo sportowe i cyberhigiena.</p></div>
+          <div class="item"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#fde68a" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg><p>Rozwój społeczności lokalnych poprzez pszczelarstwo, ekologię i programy aktywizacji.</p></div>
+        </div>
+        <a href="#misja" class="more">Zobacz misję i nadzór fundacji
+          <svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="misja">
+    <div class="wrap mission-grid">
+      <div class="reveal">
+        <span class="kicker">O nas / misja</span>
+        <h2 class="title">Fundacja tworzona z myślą o realnym wsparciu, edukacji i odpowiedzialnym rozwoju.</h2>
+        <p class="text">FUNDACJA MATULANKA powstała w Białej Niżnej, w Gminie Grybów, aby odpowiadać na potrzeby rodzin i osób wymagających codziennego wsparcia. Łączy działania społeczne, opiekuńcze i edukacyjne z unikalnymi obszarami: pszczelarstwem, bezpieczeństwem i aktywnością sportową. Dzięki temu tworzy przestrzeń, w której troska o człowieka spotyka się z kompetencją, sprawczością i zakorzenieniem w lokalnej wspólnocie.</p>
+        <div class="fact-grid">
+          <div class="fact"><div class="l">Siedziba</div><div class="v">Biała Niżna, Gmina Grybów, woj. małopolskie</div></div>
+          <div class="fact"><div class="l">Zakres działań</div><div class="v">Rodziny, dzieci, młodzież, seniorzy, osoby chore i z niepełnosprawnościami</div></div>
+          <div class="fact"><div class="l">Formy pomocy</div><div class="v">Warsztaty, szkolenia, kolonie, placówki i punkty wsparcia</div></div>
+          <div class="fact"><div class="l">Wyróżniki</div><div class="v">Pszczelarstwo, strzelectwo sportowe, survival, cyberbezpieczeństwo</div></div>
+        </div>
+      </div>
+
+      <div class="reveal legal-card">
+        <span class="pill">Status prawny i nadzór</span>
+        <h3>Działamy transparentnie, zgodnie ze statutem i pod nadzorem państwowym.</h3>
+        <div class="box">
+          <div class="row"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l9-6 9 6M5 10v9h14v-9M9 21v-6h6v6"/></svg>Organ nadzorujący</div>
+          <p>Minister Rodziny, Pracy i Polityki Społecznej.</p>
+        </div>
+        <div class="box">
+          <div class="row"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>Podstawa ustanowienia</div>
+          <p>Akt notarialny z dnia 14.04.2026 r. oraz statut określający cele społeczne, edukacyjne i humanitarne fundacji.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="filary">
+    <div class="wrap">
+      <div class="reveal pillars-head">
+        <div>
+          <span class="kicker">Filary działania</span>
+          <h2 class="title" style="max-width:44ch">Trzy strategiczne obszary, które definiują charakter Fundacji Matulanka.</h2>
+        </div>
+        <p class="text" style="max-width:40ch">Każdy filar odpowiada na realne potrzeby społeczne i buduje trwałą wartość: od opieki i pomocy społecznej, przez bezpieczeństwo i edukację, po naturę oraz rozwój lokalny.</p>
+      </div>
+
+      <div class="pillar-grid">
+        <article class="reveal pillar">
+          <div class="pillar-top p1">
+            <span class="pillar-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5 5 0 0 0-7.1 0L12 6.3l-1.7-1.7a5 5 0 1 0-7.1 7.1L12 20.3l8.8-8.6a5 5 0 0 0 0-7.1Z"/></svg></span>
+            <div><div class="sub">Rodzina i troska</div><div class="ttl">Wsparcie i Opieka</div></div>
+          </div>
+          <div class="pillar-body">
+            <p>Codzienna pomoc rodzinom, seniorom oraz osobom chorym i z niepełnosprawnościami – tam, gdzie potrzeba wsparcia jest największa.</p>
+            <ul>
+              <li>Pomoc społeczna, charytatywna i humanitarna dla osób w potrzebie</li>
+              <li>Opieka wytchnieniowa dla opiekunów osób zależnych</li>
+              <li>Punkty darmowej pomocy prawnej</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="reveal pillar">
+          <div class="pillar-top p2">
+            <span class="pillar-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v6c0 5-3 8-7 9-4-1-7-4-7-9V6l7-3Z"/></svg></span>
+            <div><div class="sub">Wiedza, która chroni</div><div class="ttl">Edukacja i Bezpieczeństwo</div></div>
+          </div>
+          <div class="pillar-body">
+            <p>Praktyczne szkolenia z bezpieczeństwa, pierwszej pomocy i cyberhigieny oraz popularyzacja strzelectwa sportowego i rekreacyjnego.</p>
+            <ul>
+              <li>Kursy pierwszej pomocy i cyberbezpieczeństwa</li>
+              <li>Strzelectwo sportowe i rekreacyjne</li>
+              <li>Edukacja proobronna i survival</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="reveal pillar">
+          <div class="pillar-top p3">
+            <span class="pillar-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3c-3.5 0-6 2.5-6 5.5 0 2 1.2 3.8 3 4.7-.6 1-1 2.3-1 3.6 0 2.6 1.8 4.7 4 4.7s4-2.1 4-4.7c0-1.3-.4-2.6-1-3.6 1.8-.9 3-2.7 3-4.7C18 5.5 15.5 3 12 3Z"/></svg></span>
+            <div><div class="sub">Zakorzenieni lokalnie</div><div class="ttl">Natura i Rozwój</div></div>
+          </div>
+          <div class="pillar-body">
+            <p>Popularyzacja pszczelarstwa, ekologii i innowacji społecznych, które wzmacniają lokalną wspólnotę i aktywizację zawodową.</p>
+            <ul>
+              <li>Popularyzacja pszczelarstwa</li>
+              <li>Ekologia i edukacja przyrodnicza</li>
+              <li>Aktywizacja społeczno-zawodowa</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="jak-pomagamy">
+    <div class="wrap">
+      <div class="reveal" style="text-align:center">
+        <span class="kicker" style="justify-content:center">Jak pomagamy</span>
+        <h2 class="title" style="max-width:56ch;margin-left:auto;margin-right:auto">Od diagnozy potrzeb po długofalowe wsparcie — działamy w sposób praktyczny i systemowy.</h2>
+      </div>
+
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-dot"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15Z"/></svg></div>
+          <div class="step-card">
+            <span class="step-tag">Etap 1</span>
+            <h3>Warsztaty i szkolenia</h3>
+            <p>Cykliczne zajęcia edukacyjne dla dzieci, młodzieży i dorosłych – od pierwszej pomocy do pszczelarstwa.</p>
+            <div class="tag-row"><span class="tag">Pierwsza pomoc</span><span class="tag">Cyberbezpieczeństwo</span><span class="tag">Pszczelarstwo</span></div>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div class="step-dot"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v6c0 5-3 8-7 9-4-1-7-4-7-9V6l7-3Z"/></svg></div>
+          <div class="step-card">
+            <span class="step-tag">Etap 2</span>
+            <h3>Kolonie i wypoczynek</h3>
+            <p>Bezpieczny, aktywny wypoczynek dla dzieci i młodzieży połączony z edukacją proobronną i survivalową.</p>
+            <div class="tag-row"><span class="tag">Kolonie letnie</span><span class="tag">Survival</span><span class="tag">Integracja</span></div>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div class="step-dot"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V9l7-6 7 6v12M9 21v-6h6v6"/></svg></div>
+          <div class="step-card">
+            <span class="step-tag">Etap 3</span>
+            <h3>Placówki opiekuńcze i edukacyjne</h3>
+            <p>Prowadzenie miejsc, w których rodziny i osoby potrzebujące znajdują stałe wsparcie i opiekę.</p>
+            <div class="tag-row"><span class="tag">Opieka dzienna</span><span class="tag">Edukacja</span><span class="tag">Wsparcie rodzin</span></div>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div class="step-dot"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5 5 0 0 0-7.1 0L12 6.3l-1.7-1.7a5 5 0 1 0-7.1 7.1L12 20.3l8.8-8.6a5 5 0 0 0 0-7.1Z"/></svg></div>
+          <div class="step-card">
+            <span class="step-tag">Etap 4</span>
+            <h3>Opieka wytchnieniowa i pomoc prawna</h3>
+            <p>Odciążenie opiekunów osób zależnych oraz bezpłatne konsultacje prawne dla osób w potrzebie.</p>
+            <div class="tag-row"><span class="tag">Opieka wytchnieniowa</span><span class="tag">Punkty pomocy prawnej</span><span class="tag">Konsultacje</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="wspieraj">
+    <div class="wrap support-grid">
+      <div class="reveal support-dark">
+        <span class="kicker" style="color:var(--amber-light);background:rgba(251,191,36,0.15)">Jak możesz pomóc</span>
+        <h2>Darowizny, dotacje i zbiórki tworzą realne możliwości działania.</h2>
+        <p>Zgodnie ze statutem fundacja może finansować działania poprzez darowizny, dotacje i zbiórki. Twoje wsparcie pomaga uruchamiać warsztaty, opiekę wytchnieniową, programy edukacyjne, działania humanitarne oraz rozwój infrastruktury pomocowej.</p>
+        <div class="support-cols">
+          <div class="box"><div class="t">Darowizny</div><div class="d">Elastyczne wsparcie bieżących działań społecznych i edukacyjnych.</div></div>
+          <div class="box"><div class="t">Dotacje</div><div class="d">Finansowanie projektów długofalowych i specjalistycznych programów.</div></div>
+          <div class="box"><div class="t">Zbiórki</div><div class="d">Zaangażowanie społeczności wokół konkretnych potrzeb i inicjatyw.</div></div>
+          <div class="box"><div class="t">Partnerstwa</div><div class="d">Wsparcie rzeczowe, eksperckie i organizacyjne dla lokalnych działań.</div></div>
+        </div>
+      </div>
+
+      <div class="reveal support-form">
+        <div class="headrow">
+          <div>
+            <span class="kicker">Formularz wsparcia</span>
+            <h3>Wybierz kwotę i zostaw kontakt</h3>
+          </div>
+          <div class="min-badge">Sugerowane min. 10 zł</div>
+        </div>
+
+        <div class="amount-grid" id="amountGrid">
+          <button type="button" class="amount" data-amount="20"><div class="lbl">Wsparcie podstawowe</div><div class="amt">20 zł</div><div class="dsc">Pomaga pokryć materiały na jedno zajęcie warsztatowe.</div></button>
+          <button type="button" class="amount" data-amount="50"><div class="lbl">Pakiet rodzinny</div><div class="amt">50 zł</div><div class="dsc">Wspiera jeden dzień opieki wytchnieniowej dla rodziny.</div></button>
+          <button type="button" class="amount active" data-amount="100"><div class="lbl">Pakiet wsparcia</div><div class="amt">100 zł</div><div class="dsc">Finansuje udział jednej osoby w szkoleniu z bezpieczeństwa.</div></button>
+          <button type="button" class="amount" data-amount="250"><div class="lbl">Mecenas fundacji</div><div class="amt">250 zł</div><div class="dsc">Umożliwia zakup sprzętu pszczelarskiego lub ratowniczego.</div></button>
+        </div>
+
+        <form class="donate" id="donateForm">
+          <div class="field-row">
+            <label class="field">Imię i nazwisko / nazwa
+              <input type="text" id="donorName" placeholder="Np. Anna Kowalska" />
+            </label>
+            <label class="field">Adres e-mail
+              <input type="email" id="donorEmail" placeholder="kontakt@twojadomena.pl" />
+            </label>
+          </div>
+
+          <label class="field">Własna kwota wsparcia
+            <input type="number" id="customAmount" min="0" placeholder="Wpisz kwotę, jeśli chcesz wesprzeć inaczej" />
+          </label>
+
+          <div class="amount-summary">
+            <div><div class="l">Deklarowana kwota wsparcia</div><div class="v" id="amountSummary">100 zł</div></div>
+            <svg class="icon" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg>
+          </div>
+
+          <label class="consent">
+            <input type="checkbox" id="consentBox" />
+            <span>Wyrażam zgodę na kontakt zwrotny w sprawie wsparcia Fundacji Matulanka oraz otrzymanie informacji organizacyjnych.</span>
+          </label>
+
+          <button type="submit" class="btn btn-dark">Deklaruję wsparcie
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+
+          <div id="formMsg" style="display:none"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer id="kontakt">
+  <div class="wrap foot-grid">
+    <div>
+      <div class="foot-brand">
+        <span class="brand-badge">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3c-3.5 0-6 2.5-6 5.5 0 2 1.2 3.8 3 4.7-.6 1-1 2.3-1 3.6 0 2.6 1.8 4.7 4 4.7s4-2.1 4-4.7c0-1.3-.4-2.6-1-3.6 1.8-.9 3-2.7 3-4.7C18 5.5 15.5 3 12 3Z"/></svg>
+        </span>
+        <span><small style="display:block;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--amber-light);font-weight:700">Fundacja</small><strong style="display:block;font-size:18px;font-weight:700">Matulanka</strong></span>
+      </div>
+      <p style="margin-top:20px;max-width:420px">Nowa fundacja z Białej Niżnej wspierająca rodziny, osoby w potrzebie i rozwój bezpiecznej, aktywnej społeczności lokalnej.</p>
+      <div style="margin-top:22px;font-size:14px;color:#cbd5e1;display:flex;flex-direction:column;gap:8px">
+        <p style="margin:0"><strong style="color:#fff">Siedziba:</strong> Biała Niżna, Gmina Grybów, woj. małopolskie</p>
+        <p style="margin:0"><strong style="color:#fff">Nadzór:</strong> Minister Rodziny, Pracy i Polityki Społecznej</p>
+        <p style="margin:0"><strong style="color:#fff">Data ustanowienia:</strong> 14.04.2026 r.</p>
+      </div>
+    </div>
+
+    <div>
+      <h3>Nawigacja</h3>
+      <div class="foot-links">
+        <a href="#start">Start</a>
+        <a href="#misja">Misja</a>
+        <a href="#filary">Filary</a>
+        <a href="#jak-pomagamy">Jak pomagamy</a>
+        <a href="#wspieraj">Wspieraj</a>
+        <a href="#kontakt">Kontakt</a>
+      </div>
+    </div>
+
+    <div>
+      <h3>Dane rejestrowe</h3>
+      <div class="foot-legal">
+        <p style="margin:0"><strong>KRS:</strong> 0001241173</p>
+        <p style="margin:0"><strong>NIP:</strong> 7343670962</p>
+        <p style="margin:0"><strong>REGON:</strong> 544752575</p>
+        <p style="margin:0"><strong>Numer konta bankowego:</strong> 78 1600 1462 1720 4333 1000 0001</p>
+      </div>
+    </div>
+  </div>
+  <div class="foot-bottom">© 2026 FUNDACJA MATULANKA — Wszelkie prawa zastrzeżone.</div>
+</footer>
+
+<script>
+  // mobile menu
+  var burgerBtn = document.getElementById('burgerBtn');
+  var mobileMenu = document.getElementById('mobileMenu');
+  var iconOpen = document.getElementById('burgerIconOpen');
+  var iconClose = document.getElementById('burgerIconClose');
+  burgerBtn.addEventListener('click', function () {
+    var isOpen = mobileMenu.classList.toggle('open');
+    iconOpen.style.display = isOpen ? 'none' : '';
+    iconClose.style.display = isOpen ? '' : 'none';
+  });
+  mobileMenu.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', function () {
+      mobileMenu.classList.remove('open');
+      iconOpen.style.display = '';
+      iconClose.style.display = 'none';
+    });
+  });
+
+  // reveal on scroll
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) entry.target.classList.add('in-view');
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(function (el) { observer.observe(el); });
+
+  // support amount picker
+  var amountButtons = Array.prototype.slice.call(document.querySelectorAll('.amount'));
+  var customAmountInput = document.getElementById('customAmount');
+  var amountSummary = document.getElementById('amountSummary');
+  var selectedAmount = 100;
+
+  function refreshSummary() {
+    var custom = parseFloat(customAmountInput.value);
+    var final = (!isNaN(custom) && custom > 0) ? custom : selectedAmount;
+    amountSummary.textContent = (final || 0) + ' zł';
+    return final;
   }
 
-  function removeOverlay() {
-    if (overlay) { overlay.remove(); overlay = null; }
-    if (label) { label.remove(); label = null; }
+  amountButtons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      selectedAmount = parseFloat(btn.getAttribute('data-amount'));
+      customAmountInput.value = '';
+      amountButtons.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      refreshSummary();
+    });
+  });
+  customAmountInput.addEventListener('input', function () {
+    if (customAmountInput.value) amountButtons.forEach(function (b) { b.classList.remove('active'); });
+    refreshSummary();
+  });
+
+  // support form (informational — no data is sent anywhere; this page has no backend)
+  var donateForm = document.getElementById('donateForm');
+  var formMsg = document.getElementById('formMsg');
+  var donorNameInput = document.getElementById('donorName');
+  var donorEmailInput = document.getElementById('donorEmail');
+  var consentBox = document.getElementById('consentBox');
+
+  function showMsg(text, ok) {
+    formMsg.textContent = text;
+    formMsg.className = 'form-msg ' + (ok ? 'ok' : 'err');
+    formMsg.style.display = 'block';
   }
 
-  function findSourceAttr(el) {
-    while (el && el !== document.body && el !== document.documentElement) {
-      var src = el.getAttribute('data-source-loc');
-      if (src) return { element: el, source: src };
-      el = el.parentElement;
-    }
-    return null;
-  }
-
-  function parseSource(sourceStr) {
-    // Format: "relative/path.tsx:line:col"
-    var parts = sourceStr.split(':');
-    if (parts.length < 3) return { file: sourceStr, line: 0, column: 0 };
-    var col = parseInt(parts.pop(), 10);
-    var line = parseInt(parts.pop(), 10);
-    var file = parts.join(':'); // rejoin in case path has colons (unlikely but safe)
-    return { file: file, line: line, column: col };
-  }
-
-  function highlightElement(el) {
-    if (!overlay || !el) return;
-
-    var rect = el.getBoundingClientRect();
-    overlay.style.top = rect.top + 'px';
-    overlay.style.left = rect.left + 'px';
-    overlay.style.width = rect.width + 'px';
-    overlay.style.height = rect.height + 'px';
-    overlay.style.display = 'block';
-
-    var tag = el.tagName.toLowerCase();
-    var src = el.getAttribute('data-source-loc');
-    var labelText = '<' + tag + '>';
-    if (src) {
-      var parsed = parseSource(src);
-      labelText += '  ' + parsed.file + ':' + parsed.line;
-    }
-    label.textContent = labelText;
-
-    // Position label above the element, or below if too close to top
-    var labelTop = rect.top - 22;
-    if (labelTop < 4) labelTop = rect.bottom + 4;
-    label.style.top = labelTop + 'px';
-    label.style.left = Math.max(4, rect.left) + 'px';
-    label.style.display = 'block';
-  }
-
-  function hideOverlay() {
-    if (overlay) overlay.style.display = 'none';
-    if (label) label.style.display = 'none';
-    currentTarget = null;
-  }
-
-  function onMouseOver(e) {
-    if (!inspectEnabled) return;
-    var target = e.target;
-
-    // Skip our own overlay elements
-    if (target === overlay || target === label) return;
-    if (target.id === '__picker-overlay' || target.id === '__picker-label') return;
-
-    var found = findSourceAttr(target);
-    if (found) {
-      currentTarget = found.element;
-      highlightElement(found.element);
-    } else {
-      currentTarget = target;
-      highlightElement(target);
-    }
-  }
-
-  function onMouseOut(e) {
-    if (!inspectEnabled) return;
-    var related = e.relatedTarget;
-    if (related === overlay || related === label) return;
-    if (!e.relatedTarget || e.relatedTarget === document) {
-      hideOverlay();
-    }
-  }
-
-  function onClick(e) {
-    if (!inspectEnabled) return;
-
+  donateForm.addEventListener('submit', function (e) {
     e.preventDefault();
-    e.stopPropagation();
-    e.stopImmediatePropagation();
+    var name = donorNameInput.value.trim();
+    var email = donorEmailInput.value.trim();
+    var finalAmount = refreshSummary();
 
-    var target = e.target;
-    if (target === overlay || target === label) return;
+    if (!name) { showMsg('Wpisz imię i nazwisko lub nazwę darczyńcy.', false); return; }
+    var emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!emailValid) { showMsg('Podaj poprawny adres e-mail, aby otrzymać potwierdzenie kontaktu.', false); return; }
+    if (finalAmount < 10) { showMsg('Minimalna sugerowana kwota wsparcia to 10 zł.', false); return; }
+    if (!consentBox.checked) { showMsg('Aby kontynuować, zaznacz zgodę na kontakt zwrotny.', false); return; }
 
-    var found = findSourceAttr(target);
-    var element = found ? found.element : target;
-    var sourceStr = found ? found.source : null;
-
-    var info = {
-      type: 'element:selected',
-      tag: element.tagName.toLowerCase(),
-      text: (element.textContent || '').trim().substring(0, 200),
-      classes: element.className && typeof element.className === 'string'
-        ? element.className.substring(0, 300) : '',
-      id: element.id || '',
-      file: null,
-      line: null,
-      column: null,
-    };
-
-    if (sourceStr) {
-      var parsed = parseSource(sourceStr);
-      info.file = parsed.file;
-      info.line = parsed.line;
-      info.column = parsed.column;
-    }
-
-    // Send to parent
-    if (window.parent && window.parent !== window) {
-      window.parent.postMessage(info, '*');
-    }
-    // Also log locally for standalone testing
-    console.log('[element-picker] Selected:', info);
-  }
-
-  function enableInspect() {
-    if (inspectEnabled) return;
-    inspectEnabled = true;
-    createOverlay();
-    document.addEventListener('mouseover', onMouseOver, true);
-    document.addEventListener('mouseout', onMouseOut, true);
-    document.addEventListener('click', onClick, true);
-    document.body.style.cursor = 'crosshair';
-    console.log('[element-picker] Inspect mode ON');
-  }
-
-  function disableInspect() {
-    if (!inspectEnabled) return;
-    inspectEnabled = false;
-    document.removeEventListener('mouseover', onMouseOver, true);
-    document.removeEventListener('mouseout', onMouseOut, true);
-    document.removeEventListener('click', onClick, true);
-    hideOverlay();
-    removeOverlay();
-    document.body.style.cursor = '';
-    console.log('[element-picker] Inspect mode OFF');
-  }
-
-  // Listen for commands from parent
-  window.addEventListener('message', function (e) {
-    if (!e.data || typeof e.data.type !== 'string') return;
-
-    if (e.data.type === 'inspect:mode') {
-      if (e.data.enabled) {
-        enableInspect();
-      } else {
-        disableInspect();
-      }
-    }
+    showMsg('Dziękujemy, ' + name.split(' ')[0] + '! Zgłoszenie wsparcia na kwotę ' + finalAmount + ' zł jest gotowe do dalszego kontaktu.', true);
   });
-
-  // Also support toggling via keyboard (Alt+Shift+I) for standalone testing
-  document.addEventListener('keydown', function (e) {
-    if (e.altKey && e.shiftKey && e.key === 'I') {
-      if (inspectEnabled) {
-        disableInspect();
-      } else {
-        enableInspect();
-      }
-    }
-  });
-
-  console.log('[element-picker] Loaded. Waiting for inspect-mode command (or press Alt+Shift+I).');
-})();
 </script>
-  </body>
+</body>
 </html>
