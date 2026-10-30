@@ -36,6 +36,26 @@
   .wrap{max-width:1280px;margin:0 auto;padding:0 20px}
   @media (min-width:768px){.wrap{padding:0 32px}}
 
+  /* aktualności */
+  .news-grid{margin-top:40px;display:grid;gap:24px}
+  .news-card{
+    display:grid;grid-template-columns:1fr;border-radius:28px;overflow:hidden;background:#fff;border:1px solid var(--line);
+    box-shadow:0 16px 30px -20px rgba(15,23,42,0.25);transition:transform .3s,box-shadow .3s;
+  }
+  .news-card:hover{transform:translateY(-4px);box-shadow:0 26px 44px -20px rgba(15,23,42,0.32)}
+  .news-photo{position:relative;min-height:240px;background:var(--navy-soft)}
+  .news-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .news-body{padding:28px;display:flex;flex-direction:column;justify-content:center}
+  .news-date{display:inline-block;align-self:flex-start;border-radius:999px;background:rgba(245,158,11,0.12);color:#b45309;padding:6px 14px;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+  .news-body h3{margin:16px 0 0;font-size:clamp(1.3rem,2.2vw,1.8rem);line-height:1.25;font-weight:900;color:var(--ink)}
+  .news-body p{margin:16px 0 0;font-size:15px;line-height:1.85;color:var(--muted)}
+  .news-body p.news-credit{margin-top:20px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;line-height:1.7;color:#334155}
+  @media (min-width:900px){
+    .news-card{grid-template-columns:1.1fr 1fr}
+    .news-photo{min-height:400px}
+    .news-body{padding:40px}
+  }
+
   /* header */
   header{
     position:sticky;top:0;z-index:50;
@@ -266,6 +286,7 @@
 
     <nav class="nav-links">
       <a href="#start">Start</a>
+      <a href="#aktualnosci">Aktualności</a>
       <a href="#misja">Misja</a>
       <a href="#filary">Filary</a>
       <a href="#jak-pomagamy">Jak pomagamy</a>
@@ -284,6 +305,7 @@
   <div class="mobile-menu" id="mobileMenu">
     <div class="wrap">
       <a href="#start">Start</a>
+      <a href="#aktualnosci">Aktualności</a>
       <a href="#misja">Misja</a>
       <a href="#filary">Filary</a>
       <a href="#jak-pomagamy">Jak pomagamy</a>
@@ -336,6 +358,29 @@
         <a href="#misja" class="more">Zobacz misję i nadzór fundacji
           <svg class="icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
         </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="aktualnosci">
+    <div class="wrap">
+      <div class="reveal">
+        <span class="kicker">Aktualności</span>
+        <h2 class="title" style="max-width:44ch">Co ostatnio u nas słychać.</h2>
+      </div>
+
+      <div class="news-grid">
+        <article class="reveal news-card">
+          <div class="news-photo">
+            <img src="skolowani-przyroda.jpg" alt="Uczestnicy projektu „Skołowani Przyrodą” z budkami lęgowymi i hotelem dla owadów oraz banerem Fundacji MATULANKA przed Centrum Sportów Zimowych" loading="lazy" />
+          </div>
+          <div class="news-body">
+            <span class="news-date">28.10.2026 r.</span>
+            <h3>Projekt „Skołowani Przyrodą” zakończony sukcesem!</h3>
+            <p>Za nami cykl integracyjnych warsztatów eko-sensorycznych oraz finałowy turniej ze strzelnicą laserową, zorganizowany dla osób z niepełnosprawnościami z Miasta i Gminy Grybów. W ramach wspólnych działań uczestnicy wraz z wolontariuszami zmontowali i zaimpregnowali schronienia dla ptaków i owadów pożytecznych oraz zamontowali tablice edukacyjne w formacie ETR w przestrzeni publicznej.</p>
+            <p class="news-credit">Projekt został zrealizowany przez Fundację MATULANKA przy wsparciu finansowym Województwa Małopolskiego.</p>
+          </div>
+        </article>
       </div>
     </div>
   </section>
@@ -563,6 +608,7 @@
       <h3>Nawigacja</h3>
       <div class="foot-links">
         <a href="#start">Start</a>
+        <a href="#aktualnosci">Aktualności</a>
         <a href="#misja">Misja</a>
         <a href="#filary">Filary</a>
         <a href="#jak-pomagamy">Jak pomagamy</a>
